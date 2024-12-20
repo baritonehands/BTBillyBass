@@ -59,65 +59,56 @@ void setup() {
 
 void loop() {
   currentTime = millis(); //updates the time each time the loop is run
-  // updateSoundInput(); //updates the volume level detected
-  // SMBillyBass(); //this is the switch/case statement to control the state of the fish
-  
-  tiltBody();   
-
-  openMouth();
-  closeMouth();
-
-  flap();
-  flap();
-  flap();
+  updateSoundInput(); //updates the volume level detected
+  SMBillyBass(); //this is the switch/case statement to control the state of the fish
 }
 
-// void SMBillyBass() {
-//   switch (fishState) {
-//     case 0: //START & WAITING
-//       if (soundVolume > silence) { //if we detect audio input above the threshold
-//         if (currentTime > mouthActionTime) { //and if we haven't yet scheduled a mouth movement
-//           talking = true; //  set talking to true and schedule the mouth movement action
-//           mouthActionTime = currentTime + 100;
-//           fishState = 1; // jump to a talking state
-//         }
-//       } else if (currentTime > mouthActionTime + 100) { //if we're beyond the scheduled talking time, halt the motors
-//         bodyMotor.halt();
-//         mouthMotor.halt();
-//       }
-//       if (currentTime - lastActionTime > 1500) { //if Billy hasn't done anything in a while, we need to show he's bored
-//         lastActionTime = currentTime + floor(random(30, 60)) * 1000L; //you can adjust the numbers here to change how often he flaps
-//         fishState = 2; //jump to a flapping state!
-//       }
-//       break;
+void SMBillyBass() {
+  switch (fishState) {
+    case 0: //START & WAITING
+      if (soundVolume > silence) { //if we detect audio input above the threshold
+        if (currentTime > mouthActionTime) { //and if we haven't yet scheduled a mouth movement
+          talking = true; //  set talking to true and schedule the mouth movement action
+          mouthActionTime = currentTime + 100;
+          fishState = 1; // jump to a talking state
+        }
+      } else if (currentTime > mouthActionTime + 100) { //if we're beyond the scheduled talking time, halt the motors
+        bodyMotor.halt();
+        mouthMotor.halt();
+      }
+      if (currentTime - lastActionTime > 1500) { //if Billy hasn't done anything in a while, we need to show he's bored
+        lastActionTime = currentTime + floor(random(30, 60)) * 1000L; //you can adjust the numbers here to change how often he flaps
+        fishState = 2; //jump to a flapping state!
+      }
+      break;
 
-//     case 1: //TALKING
-//       if (currentTime < mouthActionTime) { //if we have a scheduled mouthActionTime in the future....
-//         if (talking) { // and if we think we should be talking
-//           openMouth(); // then open the mouth and articulate the body
-//           lastActionTime = currentTime;
-//           articulateBody(true);
-//         }
-//       }
-//       else { // otherwise, close the mouth, don't articulate the body, and set talking to false
-//         closeMouth();
-//         articulateBody(false);
-//         talking = false;
-//         fishState = 0; //jump back to waiting state
-//       }
-//       break;
+    case 1: //TALKING
+      if (currentTime < mouthActionTime) { //if we have a scheduled mouthActionTime in the future....
+        if (talking) { // and if we think we should be talking
+          openMouth(); // then open the mouth and articulate the body
+          lastActionTime = currentTime;
+          articulateBody(true);
+        }
+      }
+      else { // otherwise, close the mouth, don't articulate the body, and set talking to false
+        closeMouth();
+        articulateBody(false);
+        talking = false;
+        fishState = 0; //jump back to waiting state
+      }
+      break;
 
-//     case 2: //GOTTA FLAP!
-//       //Serial.println("I'm bored. Gotta flap.");
-//       flap();
-//       fishState = 0;
-//       break;
-//   }
-// }
+    case 2: //GOTTA FLAP!
+      //Serial.println("I'm bored. Gotta flap.");
+      flap();
+      fishState = 0;
+      break;
+  }
+}
 
-// int updateSoundInput() {
-//   soundVolume = analogRead(soundPin);
-// }
+int updateSoundInput() {
+  soundVolume = analogRead(soundPin);
+}
 
 void openMouth() {
   mouthMotor.halt(); //stop the mouth motor
@@ -137,47 +128,47 @@ void closeMouth() {
   delay(500);
 }
 
-// void articulateBody(bool talking) { //function for articulating the body
-//   if (talking) { //if Billy is talking
-//     if (currentTime > bodyActionTime) { // and if we don't have a scheduled body movement
-//       int r = floor(random(0, 8)); // create a random number between 0 and 7)
-//       if (r < 1) {
-//         bodySpeed = 0; // don't move the body
-//         bodyActionTime = currentTime + floor(random(500, 1000)); //schedule body action for .5 to 1 seconds from current time
-//         bodyMotor.forward(); //move the body motor to raise the head
+void articulateBody(bool talking) { //function for articulating the body
+  if (talking) { //if Billy is talking
+    if (currentTime > bodyActionTime) { // and if we don't have a scheduled body movement
+      int r = floor(random(0, 8)); // create a random number between 0 and 7)
+      if (r < 1) {
+        bodySpeed = 0; // don't move the body
+        bodyActionTime = currentTime + floor(random(500, 1000)); //schedule body action for .5 to 1 seconds from current time
+        bodyMotor.forward(); //move the body motor to raise the head
 
-//       } else if (r < 3) {
-//         bodySpeed = 150; //move the body slowly
-//         bodyActionTime = currentTime + floor(random(500, 1000)); //schedule body action for .5 to 1 seconds from current time
-//         bodyMotor.forward(); //move the body motor to raise the head
+      } else if (r < 3) {
+        bodySpeed = 150; //move the body slowly
+        bodyActionTime = currentTime + floor(random(500, 1000)); //schedule body action for .5 to 1 seconds from current time
+        bodyMotor.forward(); //move the body motor to raise the head
 
-//       } else if (r == 4) {
-//         bodySpeed = 200;  // move the body medium speed
-//         bodyActionTime = currentTime + floor(random(500, 1000)); //schedule body action for .5 to 1 seconds from current time
-//         bodyMotor.forward(); //move the body motor to raise the head
+      } else if (r == 4) {
+        bodySpeed = 200;  // move the body medium speed
+        bodyActionTime = currentTime + floor(random(500, 1000)); //schedule body action for .5 to 1 seconds from current time
+        bodyMotor.forward(); //move the body motor to raise the head
 
-//       } else if ( r == 5 ) {
-//         bodySpeed = 0; //set body motor speed to 0
-//         bodyMotor.halt(); //stop the body motor (to keep from violent sudden direction changes)
-//         bodyMotor.setSpeed(255); //set the body motor to full speed
-//         bodyMotor.backward(); //move the body motor to raise the tail
-//         bodyActionTime = currentTime + floor(random(900, 1200)); //schedule body action for .9 to 1.2 seconds from current time
-//       }
-//       else {
-//         bodySpeed = 255; // move the body full speed
-//         bodyMotor.forward(); //move the body motor to raise the head
-//         bodyActionTime = currentTime + floor(random(1500, 3000)); //schedule action time for 1.5 to 3.0 seconds from current time
-//       }
-//     }
+      } else if ( r == 5 ) {
+        bodySpeed = 0; //set body motor speed to 0
+        bodyMotor.halt(); //stop the body motor (to keep from violent sudden direction changes)
+        bodyMotor.setSpeed(255); //set the body motor to full speed
+        bodyMotor.backward(); //move the body motor to raise the tail
+        bodyActionTime = currentTime + floor(random(900, 1200)); //schedule body action for .9 to 1.2 seconds from current time
+      }
+      else {
+        bodySpeed = 255; // move the body full speed
+        bodyMotor.forward(); //move the body motor to raise the head
+        bodyActionTime = currentTime + floor(random(1500, 3000)); //schedule action time for 1.5 to 3.0 seconds from current time
+      }
+    }
 
-//     bodyMotor.setSpeed(bodySpeed); //set the body motor speed
-//   } else {
-//     if (currentTime > bodyActionTime) { //if we're beyond the scheduled body action time
-//       bodyMotor.halt(); //stop the body motor
-//       bodyActionTime = currentTime + floor(random(20, 50)); //set the next scheduled body action to current time plus .02 to .05 seconds
-//     }
-//   }
-// }
+    bodyMotor.setSpeed(bodySpeed); //set the body motor speed
+  } else {
+    if (currentTime > bodyActionTime) { //if we're beyond the scheduled body action time
+      bodyMotor.halt(); //stop the body motor
+      bodyActionTime = currentTime + floor(random(20, 50)); //set the next scheduled body action to current time plus .02 to .05 seconds
+    }
+  }
+}
 
 void tiltBody() {
   bodyMotor.setSpeed(255);
