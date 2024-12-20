@@ -138,12 +138,12 @@ void articulateBody(bool talking) { //function for articulating the body
         bodyMotor.forward(); //move the body motor to raise the head
 
       } else if (r < 3) {
-        bodySpeed = 150; //move the body slowly
+        bodySpeed = 200; //move the body slowly
         bodyActionTime = currentTime + floor(random(500, 1000)); //schedule body action for .5 to 1 seconds from current time
         bodyMotor.forward(); //move the body motor to raise the head
 
       } else if (r == 4) {
-        bodySpeed = 200;  // move the body medium speed
+        bodySpeed = 225;  // move the body medium speed
         bodyActionTime = currentTime + floor(random(500, 1000)); //schedule body action for .5 to 1 seconds from current time
         bodyMotor.forward(); //move the body motor to raise the head
 
